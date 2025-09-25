@@ -3,42 +3,34 @@ import React from "react";
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
+    this.state = { hasError: false, error: null };
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    return { hasError: true, error };
   }
 
   componentDidCatch(error, errorInfo) {
-    this.setState({
-      error: error,
-      errorInfo: errorInfo,
-    });
     console.error("Error caught by boundary:", error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-          <div className="max-w-md w-full bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-bold text-red-600 mb-4">
+        <div className="min-h-screen flex items-center justify-center bg-navy p-8">
+          <div className="glassmorphism p-8 rounded-2xl text-center max-w-md">
+            <div className="text-6xl mb-4">😵</div>
+            <h2 className="text-2xl font-bold mb-4 text-red-400">
               Something went wrong
             </h2>
-            <details className="whitespace-pre-wrap">
-              <summary className="cursor-pointer mb-2">Error Details</summary>
-              {this.state.error && this.state.error.toString()}
-              <br />
-              {this.state.errorInfo.componentStack}
-            </details>
+            <p className="text-gray-300 mb-6">
+              We're sorry, but something unexpected happened.
+            </p>
             <button
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-              onClick={() =>
-                this.setState({ hasError: false, error: null, errorInfo: null })
-              }
+              onClick={() => window.location.reload()}
+              className="bg-cyan-500 px-6 py-3 rounded-lg glow"
             >
-              Try again
+              Refresh Page
             </button>
           </div>
         </div>

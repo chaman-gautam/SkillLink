@@ -30,7 +30,7 @@ const Home = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="text-center py-20 px-4">
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 neon-text">
+        <h1 className="text-5xl md:text-7xl font-bold mb-6 neon-text text-white">
           SkillLink – Connect. Grow. Succeed.
         </h1>
         <p className="text-xl md:text-2xl mb-8 text-lavender">

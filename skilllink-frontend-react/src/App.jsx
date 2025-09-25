@@ -108,7 +108,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
-// import { AppProvider } from "./contexts/AppContext";
+import { AppProvider } from "./contexts/AppContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 import LoadingSpinner from "./components/LoadingSpinner";
 import Navbar from "./components/Navbar";
@@ -129,19 +129,35 @@ const DocumentVerification = React.lazy(() =>
   import("./pages/DocumentVerification")
 );
 const AIMentor = React.lazy(() => import("./pages/AIMentor"));
-// const StudentProfile = React.lazy(() => import("./pages/StudentProfile"));
-// const RecruiterProfile = React.lazy(() => import("./pages/RecruiterProfile"));
-// const Reports = React.lazy(() => import("./pages/Reports"));
+const StudentProfile = React.lazy(() => import("./pages/StudentProfile"));
+const RecruiterProfile = React.lazy(() => import("./pages/RecruiterProfile"));
+const Reports = React.lazy(() => import("./pages/Reports"));
 const About = React.lazy(() => import("./pages/About"));
 const Contact = React.lazy(() => import("./pages/Contact"));
 const FAQ = React.lazy(() => import("./pages/FAQ"));
-// const Terms = React.lazy(() => import("./pages/Terms"));
-// const Privacy = React.lazy(() => import("./pages/Privacy"));
-// const Notifications = React.lazy(() => import("./pages/Notifications"));
-// const Settings = React.lazy(() => import("./pages/Settings"));
+const Terms = React.lazy(() => import("./pages/Terms"));
+const Privacy = React.lazy(() => import("./pages/Privacy"));
+const Notifications = React.lazy(() => import("./pages/Notifications"));
+const Settings = React.lazy(() => import("./pages/Settings"));
 
 // Protected Route Component
 const ProtectedRoute = ({ children, requiredRole }) => {
+  // In your App.jsx, update the login function:
+  const login = (email, password, role) => {
+    const userData = {
+      id: Date.now(),
+      email: email,
+      name:
+        role === "admin"
+          ? "Admin User"
+          : role === "recruiter"
+          ? "Recruiter User"
+          : "Student User",
+      role: role,
+      avatar: role === "admin" ? "👨‍💼" : role === "recruiter" ? "💼" : "🎓",
+    };
+    setUser(userData);
+  };
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -169,8 +185,8 @@ const SuspenseWrapper = ({ children }) => (
 );
 
 function AppContent() {
-  const { theme } = useApp();
-
+  // const { theme } = useApp();
+  const theme = "dark";
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${
@@ -240,14 +256,14 @@ function AppContent() {
                   </SuspenseWrapper>
                 }
               />
-              {/* <Route
+              <Route
                 path="/privacy"
                 element={
                   <SuspenseWrapper>
                     <Privacy />
                   </SuspenseWrapper>
                 }
-              /> */}
+              />
 
               {/* Protected Routes */}
               <Route
