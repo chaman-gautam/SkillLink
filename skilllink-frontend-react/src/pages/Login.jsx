@@ -1,297 +1,380 @@
-// // LOGIN PAGE
-// import React, { useState } from "react";
-// import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "../SkillLinkAuth.css";
 
-// const Login = () => {
-//   const [formData, setFormData] = useState({
-//     role: "student",
-//     email: "",
-//     password: "",
-//   });
-//   const navigate = useNavigate();
-
-//   const handleChange = (e) => {
-//     setFormData({
-//       ...formData,
-//       [e.target.name]: e.target.value,
-//     });
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-
-//     // Admin credentials check
-//     if (
-//       formData.email === "skilllink25@gmail.com" &&
-//       formData.password === "Skill@link"
-//     ) {
-//       navigate("/admin-dashboard");
-//       return;
-//     }
-
-//     // Role-based redirection
-//     switch (formData.role) {
-//       case "student":
-//         navigate("/student-dashboard");
-//         break;
-//       case "recruiter":
-//         navigate("/recruiter-dashboard");
-//         break;
-//       case "admin":
-//         navigate("/admin-dashboard");
-//         break;
-//       default:
-//         navigate("/student-dashboard");
-//     }
-//   };
-
-//   const isFormValid = formData.email && formData.password;
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center px-4">
-//       <div className="glassmorphism p-8 rounded-2xl w-full max-w-md glow">
-//         <h2 className="text-3xl font-bold text-center mb-6">Welcome Back</h2>
-
-//         <form onSubmit={handleSubmit} className="space-y-6">
-//           {/* Role Selection */}
-//           <div>
-//             <label className="block text-sm font-medium mb-2">I am a:</label>
-//             <select
-//               name="role"
-//               value={formData.role}
-//               onChange={handleChange}
-//               className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3"
-//             >
-//               <option value="student">Student</option>
-//               <option value="recruiter">Recruiter</option>
-//               <option value="admin">Admin</option>
-//             </select>
-//           </div>
-
-//           {/* Email */}
-//           <div>
-//             <input
-//               type="email"
-//               name="email"
-//               placeholder="Email"
-//               value={formData.email}
-//               onChange={handleChange}
-//               className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3"
-//               required
-//             />
-//           </div>
-
-//           {/* Password */}
-//           <div>
-//             <input
-//               type="password"
-//               name="password"
-//               placeholder="Password"
-//               value={formData.password}
-//               onChange={handleChange}
-//               className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3"
-//               required
-//             />
-//           </div>
-
-//           {/* Submit Button */}
-//           <button
-//             type="submit"
-//             disabled={!isFormValid}
-//             className={`w-full py-3 rounded-lg font-semibold ${
-//               isFormValid
-//                 ? "bg-cyan-500 glow cursor-pointer" + {}
-//                 : "bg-gray-600 cursor-not-allowed"
-//             }`}
-//           >
-//             Login
-//           </button>
-//         </form>
-
-//         <p className="text-center mt-6">
-//           Don't have an account?{" "}
-//           <a href="/signup" className="text-cyan-300 hover:underline">
-//             Sign up
-//           </a>
-//         </p>
-
-//         {/* Admin Credentials Hint */}
-//         <div className="mt-4 p-3 bg-gray-800 rounded-lg text-sm">
-//           <p className="font-semibold">Admin Demo:</p>
-//           <p>Email: skilllink25@gmail.com</p>
-//           <p>Password: Skill@link</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Login;
-
-// LOGIN PAGE
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-
-const Login = () => {
+const SkillLinkAuth = () => {
+  const [activeTab, setActiveTab] = useState("login");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [userRole, setUserRole] = useState("student");
   const [formData, setFormData] = useState({
-    role: "student",
+    name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const tabLineRef = useRef(null);
   const navigate = useNavigate();
-  const { login } = useAuth();
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-    setError(""); // Clear error when user types
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-
-    try {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Admin credentials check
-      if (
-        formData.email === "skilllink25@gmail.com" &&
-        formData.password === "Skill@link"
-      ) {
-        login(formData.email, formData.password, "admin");
-        navigate("/admin-dashboard");
-        return;
+  // Handle tab switch animation
+  useEffect(() => {
+    if (tabLineRef.current) {
+      const activeTabElement = document.querySelector(".tab.active");
+      if (activeTabElement) {
+        const { offsetLeft, offsetWidth } = activeTabElement;
+        tabLineRef.current.style.left = `${offsetLeft}px`;
+        tabLineRef.current.style.width = `${offsetWidth}px`;
       }
+    }
+  }, [activeTab]);
 
-      // Regular user authentication
-      if (formData.email && formData.password) {
-        login(formData.email, formData.password, formData.role);
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
 
-        // Role-based redirection
-        switch (formData.role) {
-          case "student":
-            navigate("/student-dashboard");
-            break;
-          case "recruiter":
-            navigate("/recruiter-dashboard");
-            break;
-          case "admin":
-            navigate("/admin-dashboard");
-            break;
-          default:
-            navigate("/student-dashboard");
-        }
-      } else {
-        setError("Please fill in all fields");
-      }
-    } catch (err) {
-      setError("Login failed. Please check your credentials.");
-    } finally {
-      setLoading(false);
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
     }
   };
 
-  const isFormValid = formData.email && formData.password;
+  // Validate form
+  const validateForm = (isLogin = false) => {
+    const newErrors = {};
+
+    if (!isLogin && !formData.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email is invalid";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    if (!isLogin && formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    return newErrors;
+  };
+
+  // Redirect to dashboard based on role
+  const redirectToDashboard = (role) => {
+    // Store user data in localStorage
+    const userData = {
+      email: formData.email,
+      role: role,
+      name: formData.name || formData.email.split("@")[0],
+      isAuthenticated: true,
+      loginTime: new Date().toISOString(),
+    };
+
+    localStorage.setItem("skilllink-user", JSON.stringify(userData));
+
+    // Redirect based on role
+    switch (role) {
+      case "admin":
+        navigate("/dashboard/admin");
+        break;
+      case "recruiter":
+        navigate("/dashboard/recruiter");
+        break;
+      case "student":
+      default:
+        navigate("/dashboard/student");
+        break;
+    }
+  };
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const formErrors = validateForm(activeTab === "login");
+
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Simulate API call
+    setTimeout(() => {
+      // Check for admin credentials (hidden from UI)
+      if (
+        activeTab === "login" &&
+        formData.email === "skilllink2025" &&
+        formData.password === "aman@05ag"
+      ) {
+        alert("Admin login successful! Redirecting to admin dashboard...");
+        redirectToDashboard("admin");
+      } else {
+        alert(
+          `${
+            activeTab === "login" ? "Login" : "Signup"
+          } successful as ${userRole}!`
+        );
+        // Redirect based on selected role
+        redirectToDashboard(userRole);
+      }
+
+      if (rememberMe) {
+        // Store login state securely
+        localStorage.setItem("skilllink-remember", "true");
+      }
+
+      setIsSubmitting(false);
+    }, 1000);
+  };
+
+  // Social login handlers
+  const handleSocialLogin = (provider) => {
+    alert(`Logging in with ${provider}...`);
+    // For demo purposes, redirect to student dashboard
+    redirectToDashboard("student");
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="glassmorphism p-8 rounded-2xl w-full max-w-md glow">
-        <h2 className="text-3xl font-bold text-center mb-6">Welcome Back</h2>
+    <div className="skilllink-auth-container">
+      <div className="cyberpunk-bg">
+        <div className="neon-grid"></div>
+        <div className="glowing-orbs">
+          <div className="orb orb-1"></div>
+          <div className="orb orb-2"></div>
+          <div className="orb orb-3"></div>
+        </div>
+      </div>
 
-        {error && (
-          <div className="bg-red-500/20 border border-red-500/50 text-red-300 p-3 rounded-lg mb-4">
-            {error}
-          </div>
-        )}
+      <div className="auth-card">
+        <div className="card-header">
+          <h1 className="logo">
+            Skill<span>Link</span>
+          </h1>
+          <p className="tagline">Connect • Grow • Succeed</p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Role Selection */}
-          <div>
-            <label className="block text-sm font-medium mb-2">I am a:</label>
-            <select
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white"
+        <div className="tabs-container">
+          <div className="tabs">
+            <button
+              className={`tab ${activeTab === "login" ? "active" : ""}`}
+              onClick={() => setActiveTab("login")}
             >
-              <option value="student">Student</option>
-              <option value="recruiter">Recruiter</option>
-              <option value="admin">Admin</option>
-            </select>
+              Login
+            </button>
+            <button
+              className={`tab ${activeTab === "signup" ? "active" : ""}`}
+              onClick={() => setActiveTab("signup")}
+            >
+              Sign Up
+            </button>
+            <div ref={tabLineRef} className="tab-line"></div>
+          </div>
+        </div>
+
+        <div className="role-selector">
+          <label>I am a:</label>
+          <div className="role-buttons">
+            <button
+              type="button"
+              className={`role-btn ${userRole === "student" ? "active" : ""}`}
+              onClick={() => setUserRole("student")}
+            >
+              <i className="fas fa-user-graduate"></i> Student
+            </button>
+            <button
+              type="button"
+              className={`role-btn ${userRole === "recruiter" ? "active" : ""}`}
+              onClick={() => setUserRole("recruiter")}
+            >
+              <i className="fas fa-briefcase"></i> Recruiter
+            </button>
+            {activeTab === "login" && (
+              <button
+                type="button"
+                className={`role-btn ${userRole === "admin" ? "active" : ""}`}
+                onClick={() => setUserRole("admin")}
+              >
+                <i className="fas fa-shield-alt"></i> Admin
+              </button>
+            )}
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          {activeTab === "signup" && (
+            <div className="form-group">
+              <div className="input-container">
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className={errors.name ? "error" : ""}
+                  placeholder="Full Name"
+                />
+                <i className="fas fa-user input-icon"></i>
+              </div>
+              {errors.name && (
+                <span className="error-message">{errors.name}</span>
+              )}
+            </div>
+          )}
+
+          <div className="form-group">
+            <div className="input-container">
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className={errors.email ? "error" : ""}
+                placeholder="Email Address"
+              />
+              <i className="fas fa-envelope input-icon"></i>
+            </div>
+            {errors.email && (
+              <span className="error-message">{errors.email}</span>
+            )}
           </div>
 
-          {/* Email */}
-          <div>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white"
-              required
-            />
+          <div className="form-group">
+            <div className="input-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className={errors.password ? "error" : ""}
+                placeholder="Password"
+              />
+              <i className="fas fa-lock input-icon"></i>
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                <i
+                  className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+                ></i>
+              </button>
+            </div>
+            {errors.password && (
+              <span className="error-message">{errors.password}</span>
+            )}
           </div>
 
-          {/* Password */}
-          <div>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white"
-              required
-            />
-          </div>
+          {activeTab === "signup" && (
+            <div className="form-group">
+              <div className="input-container">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  className={errors.confirmPassword ? "error" : ""}
+                  placeholder="Confirm Password"
+                />
+                <i className="fas fa-lock input-icon"></i>
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  <i
+                    className={`fas ${
+                      showConfirmPassword ? "fa-eye-slash" : "fa-eye"
+                    }`}
+                  ></i>
+                </button>
+              </div>
+              {errors.confirmPassword && (
+                <span className="error-message">{errors.confirmPassword}</span>
+              )}
+            </div>
+          )}
 
-          {/* Submit Button - FIXED SYNTAX */}
+          {activeTab === "login" && (
+            <div className="form-options">
+              <label className="checkbox-container">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={() => setRememberMe(!rememberMe)}
+                />
+                <span className="checkmark"></span>
+                Remember me
+              </label>
+              <a href="#" className="forgot-password">
+                Forgot password?
+              </a>
+            </div>
+          )}
+
           <button
             type="submit"
-            disabled={!isFormValid || loading}
-            className={`w-full py-3 rounded-lg font-semibold transition-all ${
-              isFormValid && !loading
-                ? "bg-cyan-500 hover:bg-cyan-600 glow cursor-pointer"
-                : "bg-gray-600 cursor-not-allowed opacity-50"
-            }`}
+            className={`submit-btn ${isSubmitting ? "loading" : ""}`}
+            disabled={isSubmitting}
           >
-            {loading ? (
-              <div className="flex items-center justify-center">
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                Signing in...
-              </div>
+            {isSubmitting ? (
+              <>
+                <i className="fas fa-spinner fa-spin"></i> Processing...
+              </>
+            ) : activeTab === "login" ? (
+              "Login to SkillLink"
             ) : (
-              "Login"
+              "Create Account"
             )}
           </button>
         </form>
 
-        <p className="text-center mt-6">
-          Don't have an account?{" "}
-          <Link to="/signup" className="text-cyan-300 hover:underline">
-            Sign up
-          </Link>
-        </p>
-
-        {/* Admin Credentials Hint */}
-        <div className="mt-4 p-3 bg-gray-800 rounded-lg text-sm">
-          <p className="font-semibold">Admin Demo:</p>
-          <p>Email: skilllink25@gmail.com</p>
-          <p>Password: Skill@link</p>
+        <div className="social-login">
+          <p>Or continue with</p>
+          <div className="social-buttons">
+            <button
+              type="button"
+              className="social-btn google"
+              onClick={() => handleSocialLogin("Google")}
+            >
+              <i className="fab fa-google"></i>
+            </button>
+            <button
+              type="button"
+              className="social-btn linkedin"
+              onClick={() => handleSocialLogin("LinkedIn")}
+            >
+              <i className="fab fa-linkedin-in"></i>
+            </button>
+            <button
+              type="button"
+              className="social-btn github"
+              onClick={() => handleSocialLogin("GitHub")}
+            >
+              <i className="fab fa-github"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default SkillLinkAuth;

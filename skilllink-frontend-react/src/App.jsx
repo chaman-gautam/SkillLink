@@ -113,9 +113,10 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import LoadingSpinner from "./components/LoadingSpinner";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-
+// import portfolio from "./pages/Portfolio";
 // Lazy load pages for better performance
 const Home = React.lazy(() => import("./pages/Home"));
+const portfolio = React.lazy(() => import("./pages/Portfolio"));
 const Login = React.lazy(() => import("./pages/Login"));
 const Signup = React.lazy(() => import("./pages/Signup"));
 const StudentDashboard = React.lazy(() => import("./pages/StudentDashboard"));
@@ -123,13 +124,20 @@ const RecruiterDashboard = React.lazy(() =>
   import("./pages/RecruiterDashboard")
 );
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
+const resumebuilder = React.lazy(() => import("./pages/ResumeBuilder"));
+const skillpassport = React.lazy(() => import("./components/SkillPassport"));
+const settings = React.lazy(() => import("./pages/Settings"));
 const OpportunityHub = React.lazy(() => import("./pages/OpportunityHub"));
 const Challenges = React.lazy(() => import("./pages/Challenges"));
 const DocumentVerification = React.lazy(() =>
   import("./pages/DocumentVerification")
 );
+
 const AIMentor = React.lazy(() => import("./pages/AIMentor"));
 const StudentProfile = React.lazy(() => import("./pages/StudentProfile"));
+const DashboardLayout = React.lazy(() =>
+  import("./components/DashboardLayout")
+);
 const RecruiterProfile = React.lazy(() => import("./pages/RecruiterProfile"));
 const Reports = React.lazy(() => import("./pages/Reports"));
 const About = React.lazy(() => import("./pages/About"));
@@ -139,9 +147,12 @@ const Terms = React.lazy(() => import("./pages/Terms"));
 const Privacy = React.lazy(() => import("./pages/Privacy"));
 const Notifications = React.lazy(() => import("./pages/Notifications"));
 const Settings = React.lazy(() => import("./pages/Settings"));
-
+const DashboardWrapper = React.lazy(() =>
+  import("./components/DashboardWrapper")
+);
 // Protected Route Component
 const ProtectedRoute = ({ children, requiredRole }) => {
+  // In your App.jsx, update the login function:
   // In your App.jsx, update the login function:
   const login = (email, password, role) => {
     const userData = {
@@ -224,6 +235,39 @@ function AppContent() {
                   </SuspenseWrapper>
                 }
               />
+              {/* <Route
+                path="/dashboard/:role"
+                element={
+                  <SuspenseWrapper>{<DashboardWrapper />}</SuspenseWrapper>
+                }
+              /> */}
+              {/* Dashboard routes without header/footer */}
+              <Route path="/dashboard" element={<DashboardLayout />}>
+                <Route
+                  path=":role"
+                  element={
+                    <SuspenseWrapper>{<DashboardWrapper />}</SuspenseWrapper>
+                  }
+                />
+                <Route
+                  path=":role/settings"
+                  element={<SuspenseWrapper>{<settings />}</SuspenseWrapper>}
+                />
+                <Route
+                  path=":role/resumebuilder"
+                  element={
+                    <SuspenseWrapper>{<resumebuilder />}</SuspenseWrapper>
+                  }
+                />
+                <Route
+                  path=":role/skillpassport"
+                  element={
+                    <SuspenseWrapper>{<skillpassport />}</SuspenseWrapper>
+                  }
+                />
+
+                {/* <Route path=":role/profile" element={<ProfilePage />} /> */}
+              </Route>
               <Route
                 path="/about"
                 element={
@@ -232,6 +276,7 @@ function AppContent() {
                   </SuspenseWrapper>
                 }
               />
+
               <Route
                 path="/contact"
                 element={
@@ -320,3 +365,315 @@ function App() {
 }
 
 export default App;
+// //
+// import React from "react";
+// import {
+//   BrowserRouter as Router,
+//   Routes,
+//   Route,
+//   Navigate,
+// } from "react-router-dom";
+// import { AuthProvider, useAuth } from "./contexts/AuthContext";
+// import { AppProvider } from "./contexts/AppContext";
+// import ErrorBoundary from "./components/ErrorBoundary";
+// import LoadingSpinner from "./components/LoadingSpinner";
+// import Navbar from "./components/Navbar";
+// import Footer from "./components/Footer";
+
+// // Lazy load components
+// const Home = React.lazy(() => import("./pages/Home"));
+// const portfolio = React.lazy(() => import("./pages/Portfolio"));
+// const Login = React.lazy(() => import("./pages/Login"));
+// const Signup = React.lazy(() => import("./pages/Signup"));
+// const StudentDashboard = React.lazy(() => import("./pages/StudentDashboard"));
+// const RecruiterDashboard = React.lazy(() => import("./pages/RecruiterDashboard"));
+// const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
+// const OpportunityHub = React.lazy(() => import("./pages/OpportunityHub"));
+// const Challenges = React.lazy(() => import("./pages/Challenges"));
+// const DocumentVerification = React.lazy(() => import("./pages/DocumentVerification"));
+// const AIMentor = React.lazy(() => import("./pages/AIMentor"));
+// const StudentProfile = React.lazy(() => import("./pages/StudentProfile"));
+// const DashboardLayout = React.lazy(() => import("./components/DashboardLayout"));
+// const RecruiterProfile = React.lazy(() => import("./pages/RecruiterProfile"));
+// const Reports = React.lazy(() => import("./pages/Reports"));
+// const About = React.lazy(() => import("./pages/About"));
+// const Contact = React.lazy(() => import("./pages/Contact"));
+// const FAQ = React.lazy(() => import("./pages/FAQ"));
+// const Terms = React.lazy(() => import("./pages/Terms"));
+// const Privacy = React.lazy(() => import("./pages/Privacy"));
+// const Notifications = React.lazy(() => import("./pages/Notifications"));
+// const Settings = React.lazy(() => import("./pages/Settings"));
+// const DashboardWrapper = React.lazy(() => import("./components/DashboardWrapper"));
+
+// // Protected Route Component
+// const ProtectedRoute = ({ children, requiredRole }) => {
+//   const { user, loading } = useAuth();
+
+//   if (loading) {
+//     return <LoadingSpinner size="lg" text="Checking authentication..." />;
+//   }
+
+//   if (!user) {
+//     return <Navigate to="/login" />;
+//   }
+
+//   if (requiredRole && user.role !== requiredRole) {
+//     return <Navigate to="/" />;
+//   }
+
+//   return children;
+// };
+
+// // Suspense wrapper
+// const SuspenseWrapper = ({ children }) => (
+//   <React.Suspense fallback={<LoadingSpinner size="lg" text="Loading page..." />}>
+//     {children}
+//   </React.Suspense>
+// );
+
+// // Main Layout Component (with Navbar & Footer)
+// const MainLayout = ({ children }) => {
+//   return (
+//     <div className="min-h-screen flex flex-col">
+//       <Navbar />
+//       <main className="flex-grow">
+//         {children}
+//       </main>
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// function AppContent() {
+//   const theme = "dark";
+
+//   return (
+//     <div className={`min-h-screen transition-colors duration-300 ${
+//       theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
+//     }`}>
+//       <Router>
+//         <Routes>
+//           {/* Public routes with Navbar & Footer */}
+//           <Route path="/" element={
+//             <MainLayout>
+//               <SuspenseWrapper>
+//                 <Home />
+//               </SuspenseWrapper>
+//             </MainLayout>
+//           } />
+
+//           <Route path="/login" element={
+//             <MainLayout>
+//               <SuspenseWrapper>
+//                 <Login />
+//               </SuspenseWrapper>
+//             </MainLayout>
+//           } />
+
+//           <Route path="/signup" element={
+//             <MainLayout>
+//               <SuspenseWrapper>
+//                 <Signup />
+//               </SuspenseWrapper>
+//             </MainLayout>
+//           } />
+
+//           <Route path="/about" element={
+//             <MainLayout>
+//               <SuspenseWrapper>
+//                 <About />
+//               </SuspenseWrapper>
+//             </MainLayout>
+//           } />
+
+//           <Route path="/contact" element={
+//             <MainLayout>
+//               <SuspenseWrapper>
+//                 <Contact />
+//               </SuspenseWrapper>
+//             </MainLayout>
+//           } />
+
+//           <Route path="/faq" element={
+//             <MainLayout>
+//               <SuspenseWrapper>
+//                 <FAQ />
+//               </SuspenseWrapper>
+//             </MainLayout>
+//           } />
+
+//           <Route path="/terms" element={
+//             <MainLayout>
+//               <SuspenseWrapper>
+//                 <Terms />
+//               </SuspenseWrapper>
+//             </MainLayout>
+//           } />
+
+//           <Route path="/privacy" element={
+//             <MainLayout>
+//               <SuspenseWrapper>
+//                 <Privacy />
+//               </SuspenseWrapper>
+//             </MainLayout>
+//           } />
+
+//           {/* Dashboard routes WITHOUT Navbar & Footer */}
+//           <Route path="/dashboard" element={
+//             <SuspenseWrapper>
+//               <DashboardLayout />
+//             </SuspenseWrapper>
+//           }>
+//             <Route path=":role" element={
+//               <ProtectedRoute>
+//                 <SuspenseWrapper>
+//                   <DashboardWrapper />
+//                 </SuspenseWrapper>
+//               </ProtectedRoute>
+//             } />
+//           </Route>
+
+//           {/* Other protected routes WITHOUT Navbar & Footer */}
+//           <Route path="/student-dashboard" element={
+//             <DashboardLayout>
+//               <ProtectedRoute requiredRole="student">
+//                 <SuspenseWrapper>
+//                   <StudentDashboard />
+//                 </SuspenseWrapper>
+//               </ProtectedRoute>
+//             </DashboardLayout>
+//           } />
+
+//           <Route path="/recruiter-dashboard" element={
+//             <DashboardLayout>
+//               <ProtectedRoute requiredRole="recruiter">
+//                 <SuspenseWrapper>
+//                   <RecruiterDashboard />
+//                 </SuspenseWrapper>
+//               </ProtectedRoute>
+//             </DashboardLayout>
+//           } />
+
+//           <Route path="/admin-dashboard" element={
+//             <DashboardLayout>
+//               <ProtectedRoute requiredRole="admin">
+//                 <SuspenseWrapper>
+//                   <AdminDashboard />
+//                 </SuspenseWrapper>
+//               </ProtectedRoute>
+//             </DashboardLayout>
+//           } />
+
+//           {/* Other dashboard-related routes WITHOUT Navbar & Footer */}
+//           <Route path="/opportunities" element={
+//             <DashboardLayout>
+//               <ProtectedRoute>
+//                 <SuspenseWrapper>
+//                   <OpportunityHub />
+//                 </SuspenseWrapper>
+//               </ProtectedRoute>
+//             </DashboardLayout>
+//           } />
+
+//           <Route path="/challenges" element={
+//             <DashboardLayout>
+//               <ProtectedRoute>
+//                 <SuspenseWrapper>
+//                   <Challenges />
+//                 </SuspenseWrapper>
+//               </ProtectedRoute>
+//             </DashboardLayout>
+//           } />
+
+//           <Route path="/documents" element={
+//             <DashboardLayout>
+//               <ProtectedRoute>
+//                 <SuspenseWrapper>
+//                   <DocumentVerification />
+//                 </SuspenseWrapper>
+//               </ProtectedRoute>
+//             </DashboardLayout>
+//           } />
+
+//           <Route path="/ai-mentor" element={
+//             <DashboardLayout>
+//               <ProtectedRoute>
+//                 <SuspenseWrapper>
+//                   <AIMentor />
+//                 </SuspenseWrapper>
+//               </ProtectedRoute>
+//             </DashboardLayout>
+//           } />
+
+//           <Route path="/student-profile" element={
+//             <DashboardLayout>
+//               <ProtectedRoute requiredRole="student">
+//                 <SuspenseWrapper>
+//                   <StudentProfile />
+//                 </SuspenseWrapper>
+//               </ProtectedRoute>
+//             </DashboardLayout>
+//           } />
+
+//           <Route path="/recruiter-profile" element={
+//             <DashboardLayout>
+//               <ProtectedRoute requiredRole="recruiter">
+//                 <SuspenseWrapper>
+//                   <RecruiterProfile />
+//                 </SuspenseWrapper>
+//               </ProtectedRoute>
+//             </DashboardLayout>
+//           } />
+
+//           <Route path="/reports" element={
+//             <DashboardLayout>
+//               <ProtectedRoute>
+//                 <SuspenseWrapper>
+//                   <Reports />
+//                 </SuspenseWrapper>
+//               </ProtectedRoute>
+//             </DashboardLayout>
+//           } />
+
+//           <Route path="/notifications" element={
+//             <DashboardLayout>
+//               <ProtectedRoute>
+//                 <SuspenseWrapper>
+//                   <Notifications />
+//                 </SuspenseWrapper>
+//               </ProtectedRoute>
+//             </DashboardLayout>
+//           } />
+
+//           <Route path="/settings" element={
+//             <DashboardLayout>
+//               <ProtectedRoute>
+//                 <SuspenseWrapper>
+//                   <Settings />
+//                 </SuspenseWrapper>
+//               </ProtectedRoute>
+//             </DashboardLayout>
+//           } />
+
+//           {/* Catch all route */}
+//           <Route path="*" element={<Navigate to="/" replace />} />
+//         </Routes>
+//       </Router>
+//     </div>
+//   );
+// }
+
+// function App() {
+//   return (
+//     <ErrorBoundary>
+//       <AuthProvider>
+//         <AppProvider>
+//           <AppContent />
+//         </AppProvider>
+//       </AuthProvider>
+//     </ErrorBoundary>
+//   );
+// }
+
+// export default App;
+// //

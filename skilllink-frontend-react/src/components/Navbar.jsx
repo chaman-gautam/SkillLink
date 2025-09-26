@@ -77,7 +77,7 @@
 // };
 
 // export default Navbar;
-
+// import portfolio from "../pages/Portfolio";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
@@ -98,13 +98,15 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="glassmorphism-heavy sticky top-0 z-50">
+      <nav className="bg-black sticky top-0 z-50 ">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">SL</span>
+                <span className=" pl-5 text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  SkillLink
+                </span>
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-cyan-300 to-purple-300 bg-clip-text text-transparent">
                 SkillLink
@@ -115,25 +117,27 @@ const Navbar = () => {
             <div className="hidden md:flex items-center space-x-8">
               <Link
                 to="/"
-                className={`font-medium transition-all ${isActiveLink("/")}`}
+                className={` hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors ${isActiveLink(
+                  "/"
+                )}`}
               >
                 Home
               </Link>
               <Link
-                to="/opportunities"
-                className={`font-medium transition-all ${isActiveLink(
-                  "/opportunities"
+                to="/about"
+                className={` font-medium hover:text-blue-600 px-3 py-2 text-sm transition-colors ${isActiveLink(
+                  "/about"
                 )}`}
               >
-                Opportunities
+                About
               </Link>
               <Link
-                to="/challenges"
-                className={`font-medium transition-all ${isActiveLink(
-                  "/challenges"
+                to="/contact"
+                className={` hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors  ${isActiveLink(
+                  "/contact"
                 )}`}
               >
-                Challenges
+                Contact
               </Link>
 
               {user ? (
@@ -186,18 +190,19 @@ const Navbar = () => {
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center space-x-4">
+                <div className="hidden md:flex items-center space-x-4">
                   <Link
-                    to="/login"
-                    className="px-4 py-2 rounded-lg glassmorphism glow"
+                    to={"/login"}
+                    className="text-yellow-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
                   >
                     Login
                   </Link>
+
                   <Link
-                    to="/signup"
-                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-500 glow-button"
+                    to={"/signup"}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:shadow-lg transition-shadow hover:text-black"
                   >
-                    Sign Up
+                    Register
                   </Link>
                 </div>
               )}

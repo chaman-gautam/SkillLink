@@ -1,71 +1,68 @@
-import React from "react";
-import { Link } from "react-router-dom";
-
 const Footer = () => {
   return (
-    <footer className="glassmorphism mt-16 p-8">
-      <div className="container mx-auto">
-        <div className="grid md:grid-cols-4 gap-8">
+    <footer className="bg-gray-900 text-white py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-xl font-bold mb-4">SkillLink</h3>
-            <p className="text-gray-300">
-              Connecting talent with opportunities through AI-powered career
-              growth.
+            <h3 className="text-2xl font-bold mb-4">SkillLink</h3>
+            <p className="text-gray-400">
+              Connecting skills to opportunities through innovative technology
+              and verified credentials.
             </p>
           </div>
 
           <div>
             <h4 className="font-semibold mb-4">Quick Links</h4>
-            <div className="space-y-2">
-              <Link to="/about" className="block hover:text-cyan-300">
-                About
-              </Link>
-              <Link to="/opportunities" className="block hover:text-cyan-300">
-                Opportunities
-              </Link>
-              <Link to="/challenges" className="block hover:text-cyan-300">
-                Challenges
-              </Link>
-            </div>
+            <ul className="space-y-2 text-gray-400">
+              {["Home", "About", "Opportunities", "Blog", "Contact"].map(
+                (item) => (
+                  <li key={item}>
+                    <a href="#" className="hover:text-white transition-colors">
+                      {item}
+                    </a>
+                  </li>
+                )
+              )}
+            </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Support</h4>
-            <div className="space-y-2">
-              <Link to="/contact" className="block hover:text-cyan-300">
-                Contact
-              </Link>
-              <Link to="/faq" className="block hover:text-cyan-300">
-                FAQ
-              </Link>
-              <Link to="/privacy" className="block hover:text-cyan-300">
-                Privacy Policy
-              </Link>
-            </div>
+            <h4 className="font-semibold mb-4">Resources</h4>
+            <ul className="space-y-2 text-gray-400">
+              {[
+                "Help Center",
+                "Career Guide",
+                "Skill Assessment",
+                "Privacy Policy",
+                "Terms of Service",
+              ].map((item) => (
+                <li key={item}>
+                  <a href="#" className="hover:text-white transition-colors">
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Connect</h4>
-            <div className="flex space-x-4">
-              <a href="#" className="text-xl hover:text-cyan-300">
-                <i className="fab fa-linkedin"></i>
-              </a>
-              <a href="#" className="text-xl hover:text-cyan-300">
-                <i className="fab fa-twitter"></i>
-              </a>
-              <a href="#" className="text-xl hover:text-cyan-300">
-                <i className="fab fa-github"></i>
-              </a>
-            </div>
+            <h4 className="font-semibold mb-4">Contact Us</h4>
+            <address className="text-gray-400 not-italic">
+              <p>123 Innovation Drive</p>
+              <p>Tech City, TC 12345</p>
+              <p className="mt-2">info@skilllink.com</p>
+              <p>+1 (555) 123-4567</p>
+            </address>
           </div>
         </div>
 
-        <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-          <p>&copy; 2024 SkillLink. All rights reserved.</p>
+        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+          <p>
+            &copy; {new Date().getFullYear()} SkillLink. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
   );
 };
-
 export default Footer;
